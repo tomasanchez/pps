@@ -1,2 +1,2 @@
-# pps
+# Paradigmas de la Programacion
 Programming Paradigms
