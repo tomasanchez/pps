@@ -15,6 +15,8 @@ Una funcion solo servira entonces par dar un resultado; por ello es necesario co
 Simetria de la igualdad: al igual que en matematicas, colocar un igual entre dos expresiones siginifica que la primera expresion es equivalente, lo mismo que la consiguiente al simbolo igual.
 Por lo tanto entenderemos que se podra "reemplazar" por ese valor.
 
+Pattern Matching: dada una cadena de *tokens* chequearle en busqueda de un patron, de manera de definir ciertos *behaviours* para determinados *inputs*
+
 ## Comenzando con Haskel
 
 ### Primer Ejemplo
@@ -29,5 +31,43 @@ Por consola obtendriamos
 > nombreCompleto "Tito" "Puente"
 "Puente, Tito"
 ```
+### Aplicacion
+
+Las funciones por default se aplicaran
+
+De manera infija para funciones nombradas con simbolos operarios
+
+```hs
+ > 2 * 3
+ 6
+```
+
+Y de manera prefija para funciones con un determinado nombre
+
+```hs
+> multiplicar 2 3
+6
+```
+Sin embargo podemos "castear" su aplicacion de manera que
+
+```hs
+> (*) 2 3
+6
+> 2 `multiplicar` 3
+6
+```
+### Pattern Matching en Haskell
+
+Tengamos presente la funcion factorial definida como
+
+n! = 1 * ... * (n-1) * n
+
+En Haskell
+
+```hs
+factorial 0 = 1
+factorial n = factorial ( n - 1 ) * n
+```
+Al igual que en la definicion formal, para n = 0 hay un valor predefinido. A esto se llama pattern matching.
 
 
