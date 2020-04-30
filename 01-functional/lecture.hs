@@ -48,10 +48,13 @@ data Ficha = Ficha {
 crearFicha = Ficha
 
 esLaMismaFicha :: Ficha ->  Ficha -> Bool
-esLaMismaFicha ficha1 ficha2 | ((primeraFicha ficha1) == (primeraFicha ficha2)) = (segundaFicha ficha1) == (segundaFicha ficha2)
+esLaMismaFicha ficha1 ficha2 = ficha1 == ficha2 || crearFicha (segundaFicha ficha1) (primeraFicha ficha1) == ficha2 
+
+-- This has no longer effect as deriving (Show, Eq) allow us to comparison such as ficha == ficha1
+{-esLaMismaFicha ficha1 ficha2 | ((primeraFicha ficha1) == (primeraFicha ficha2)) = (segundaFicha ficha1) == (segundaFicha ficha2)
                              | ((primeraFicha ficha1) == (segundaFicha ficha2)) = (segundaFicha ficha1) == (primeraFicha ficha2)
                              | ((segundaFicha ficha1) == (primeraFicha ficha2)) = (primeraFicha ficha1) == (segundaFicha ficha2)
-                             | otherwise = False
+                             | otherwise = False-}
 
 {-  Ejercicio 2:
 
