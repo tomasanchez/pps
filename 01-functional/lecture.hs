@@ -46,7 +46,7 @@ data Ficha = Ficha {
 
 -- We can have a more specific name with creating a new function that duplicates its behaviour
 crearFicha = Ficha
-
+-- Guards are not necessary. Updated 04/30/2020
 esLaMismaFicha :: Ficha ->  Ficha -> Bool
 esLaMismaFicha ficha1 ficha2 = ficha1 == ficha2 || crearFicha (segundaFicha ficha1) (primeraFicha ficha1) == ficha2 
 
