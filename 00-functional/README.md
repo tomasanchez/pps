@@ -31,6 +31,7 @@ Por consola obtendriamos
 > nombreCompleto "Tito" "Puente"
 "Puente, Tito"
 ```
+
 ### Aplicacion
 
 Las funciones por default se aplicaran
@@ -48,6 +49,7 @@ Y de manera prefija para funciones con un determinado nombre
 > multiplicar 2 3
 6
 ```
+
 Sin embargo podemos "castear" su aplicacion de manera que
 
 ```hs
@@ -68,6 +70,5 @@ En Haskell
 factorial 0 = 1
 factorial n = factorial ( n - 1 ) * n
 ```
+
 Al igual que en la definicion formal, para n = 0 hay un valor predefinido. A esto se llama pattern matching.
-
-
