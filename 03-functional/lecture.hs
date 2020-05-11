@@ -161,23 +161,23 @@ data Transaccion = Transaccion {
     } deriving (Show, Eq)
 
 modificarSaldo :: Int -> Cuenta -> Cuenta
-modificarSaldo n cuenta = cuenta {saldo = (saldo cuenta) + n}
+modificarSaldo n cuenta = cuenta {saldo = min (saldo cuenta + n) (saldoMaximo cuenta)}
 
 realizarTransacciones :: [Transaccion] -> Cuenta -> Cuenta
-realizarTransacciones transacciones cta | null transacciones = cta
-                                        | otherwise = (foldl1 sumarSaldos . map ajustarSaldos . map (`modificarSaldo` cta). map monto) transacciones
+realizarTransacciones transacciones cta = (foldr sumarSaldos cta . map (`modificarSaldo` cta) . map monto) transacciones
 
-ajustarSaldos :: Cuenta -> Cuenta
-ajustarSaldos cta = cta {saldo = min (saldo cta) (saldoMaximo cta)}
+crearCuenta :: Int -> Cuenta -> Cuenta
+crearCuenta n cta = cta {saldo = n}
+
 
 sumarSaldos :: Cuenta -> Cuenta -> Cuenta
-sumarSaldos ct1 ct2 = ct1 {saldo = min (saldoMaximo ct1) (saldo ct1 + saldo ct2)}
+sumarSaldos ct1 ct2 = modificarSaldo (saldo ct1) ct2
 
 
 {-========================== T E S T ==========================-}
-viki = Cuenta { saldo = 0, saldoMaximo = 1000}
+test = Cuenta { saldo = 0, saldoMaximo = 1000}
 t1 = Transaccion {idx = "test1", monto = 100 }
 t2 = Transaccion {idx = "test2", monto = 200 }
 t3 = Transaccion {idx = "test3", monto = -300 }
-t4 = Transaccion {idx = "test4", monto = 10000 }
+t4 = Transaccion {idx = "test4", monto = 10000000 }
 t5 = Transaccion {idx = "test5", monto = -500 }
