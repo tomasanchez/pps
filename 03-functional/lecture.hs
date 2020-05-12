@@ -167,7 +167,7 @@ realizarTransacciones :: [Transaccion] -> Cuenta -> Cuenta
 realizarTransacciones tr cta = foldl sumarTransacciones cta tr
 
 sumarTransacciones :: Cuenta -> Transaccion -> Cuenta
-sumarTransacciones cta transaccion = modificarSaldo (monto transaccion) cta
+sumarTransacciones cta transaccion = ((`modificarSaldo` cta) . monto) transaccion
 
 {-========================== T E S T ==========================-}
 test = Cuenta { saldo = 0, saldoMaximo = 1000}
