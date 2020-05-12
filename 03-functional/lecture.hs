@@ -115,7 +115,7 @@ filtradoDeRoles = filter (\empleado -> length (tareas empleado) >= 2)
 -}
 
 hayJubilados :: [Empleado] -> Bool
-hayJubilados = ((any null) . (map tareas) . filter (\empleado -> edad empleado >= 65))
+hayJubilados = ((any null) . (map tareas) . filter ((>=2).length.tareas))
 
 {-
     Ejercicio 4:
@@ -164,15 +164,10 @@ modificarSaldo :: Int -> Cuenta -> Cuenta
 modificarSaldo n cuenta = cuenta {saldo = min (saldo cuenta + n) (saldoMaximo cuenta)}
 
 realizarTransacciones :: [Transaccion] -> Cuenta -> Cuenta
-realizarTransacciones transacciones cta = (foldr sumarSaldos cta . map (`modificarSaldo` cta) . map monto) transacciones
+realizarTransacciones tr cta = foldl sumarTransacciones cta tr
 
-crearCuenta :: Int -> Cuenta -> Cuenta
-crearCuenta n cta = cta {saldo = n}
-
-
-sumarSaldos :: Cuenta -> Cuenta -> Cuenta
-sumarSaldos ct1 ct2 = modificarSaldo (saldo ct1) ct2
-
+sumarTransacciones :: Cuenta -> Transaccion -> Cuenta
+sumarTransacciones cta transaccion = modificarSaldo (monto transaccion) cta
 
 {-========================== T E S T ==========================-}
 test = Cuenta { saldo = 0, saldoMaximo = 1000}
