@@ -24,9 +24,11 @@ Pattern Matching: dada una cadena de *tokens* chequearle en busqueda de un patro
 ```hs
 nombreCompleto nombre apellido = apellido ++ ", " ++ nombre
 ```
+
 Esto nos dice que las expresiones son equivalentes.
 
 Por consola obtendriamos
+
 ```hs
 > nombreCompleto "Tito" "Puente"
 "Puente, Tito"
@@ -58,6 +60,7 @@ Sin embargo podemos "castear" su aplicacion de manera que
 > 2 `multiplicar` 3
 6
 ```
+
 ### Pattern Matching en Haskell
 
 Tengamos presente la funcion factorial definida como
