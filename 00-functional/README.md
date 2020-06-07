@@ -19,6 +19,26 @@ Pattern Matching: dada una cadena de *tokens* chequearle en busqueda de un patro
 
 ## Comenzando con Haskel
 
+### Setup
+
+Utilizaremos ***Glasgow Haskell Compiler***, sin *stack* y a travez de una interfaz interactiva.
+
+```bash
+sudo apt-get install haskell-platform
+```
+
+Abrimos ***GHCi***
+
+```bash
+ghci
+```
+
+Luego compilaremos nuestro archivo *.hs*
+
+```bash
+> :l myfile.hs
+```
+
 ### Primer Ejemplo
 
 ```hs
@@ -63,9 +83,31 @@ Sin embargo podemos "castear" su aplicacion de manera que
 
 ### Pattern Matching en Haskell
 
+Esta tecnica permite definir un *behaviour* para un valor *(patron)* especifico.
+
+Consiste en especificar patrones, chequear si el parametro recibido cumple, y en el caso que si se realiza esa funcion especifica, sino sigue buscando; si no hay un comportamiento *"default"* al llamarla dara error.
+
+Supongamos la funcion nroSuerte
+
+```hs
+nroSuerte 7 = "7 Es el numero de la suerte."
+nroSuerte n = "No es tu dia de suerte."
+```
+
+Donde, en la consola interactiva obtendriamos:
+
+```hs
+> nroSuerte 7
+"7 Es el numero de la suerte."
+
+> nroSuerte 1243
+"No es tu dia de suerte."
+```
+
+
 Tengamos presente la funcion factorial definida como
 
-n! = 1 * ... * (n-1) * n
+> n! = 1 x ... x (n-1) x n
 
 En Haskell
 
@@ -74,4 +116,6 @@ factorial 0 = 1
 factorial n = factorial ( n - 1 ) * n
 ```
 
-Al igual que en la definicion formal, para n = 0 hay un valor predefinido. A esto se llama pattern matching.
+Al igual que en la definicion formal, para ``` n = 0 ``` hay un valor predefinido. A esto se llama pattern matching.
+
+---------------------------------------------------------------
