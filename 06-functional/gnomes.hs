@@ -91,7 +91,7 @@ materiales (_, mts, _) = mts
 -}
 
 -- Funciones de Acceso
-poblacion :: Aldea -> Pobalcion
+poblacion :: Aldea -> Valor
 poblacion (pob, _, _) = pob
 
 edificios :: Aldea -> [Edificio]
@@ -324,3 +324,47 @@ madera30 :: Material
 madera30 = ("Madera de Arce", 30)
 --
 
+{-
+    ---------------------------------------------------------------------------------------------------------------------
+-}
+
+{-
+        b) Hacer Consultas utilizando realizarLasQueCumplan de forma que
+-}
+
+{-
+            i) Se tenga un gnomito siempre que haya mas comida que Gnomos "Comida" es un material
+-}
+
+--cumpleComida :: Aldea -> Bool
+--cumpleComida una_aldea =  ((> poblacion una_aldea) . snd . (find ((== "Comida" ). fst) . materiales)) una_aldea
+-- No veo porque no quiere tomarlo
+
+{-
+            ii) Se recolecte 30 unidades de madera de valor igual a la madera mas cara disponible
+            y se refine siempre y cuando todos los materiales disponibles sean de caldiad
+-}
+
+cumpleMadera :: Aldea -> Bool
+cumpleMadera = ((all esDeCalidad) . materiales )
+
+{-
+            iii) Se construya una barraca con valor 20 siempre y cuando queden 5 disponibles de piedra
+            y el valor de los edificios chetos sea almenos la mitad del valor Total
+-}
+
+--cumpleBarraca :: Aldea -> Bool
+--cumpleBarraca aldea = (all ((>=) . (valorTotal aldea) `div` 2) . map snd . valorDeEdificiosChetos aldea) and (((>5) . disponibles "Piedra") aldea)
+-- No quiere tipar
+
+-- Sin usar :t
+f :: (a -> Bool) -> (Int, ( Int -> Int) )-> (b -> a) -> (b, Int) -> Int
+f w x y z | (w . y . fst) z = snd x 5
+          | otherwise = fst x + snd z
+
+-- Lo primero que vemos es que Z y X son tuplas de dos elementos
+-- Despues devuelven un int, esto lo denota el 5
+-- para que tipe lo anterior, el segundo de x debe ser una funcion parcialmente aplicada que vaya de (Int->Int)
+-- Por descarte, fst y snd de z son del tipo Int
+-- 'W' debe devolver un Booleano
+-- 'Y' sale buscando que encaje
