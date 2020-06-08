@@ -151,7 +151,7 @@ lustrarMaderas (pob, mat, ed) = (pob, map subirMaderas mat, ed)
 
 -- Como es una funcion partida podemos aplicar guardas
 subirMaderas :: Material -> Material
-subirMaderas (name, value) | "Madera" <= name = (name, value + 5)
+subirMaderas (name, value) | "Madera" == take 6 name = (name, value + 5)
                            | otherwise = (name, value)
 -- Supongamos que " 'Madera' <= name" funciona correctamente
 
@@ -280,3 +280,46 @@ nombresMaterialesUsados = map (map fst)
 -- Luego volemos a la pimera funcion. Ahi debemos Buscar los nombres que se repiten y ademas des-enlistar para tener [Nombre]
 -- Importante, para esto necesitamos INTESERCT que esta en Data.List, que nos permite encontrar los iguales dadas dos listas
 -- Pero Como las listas se comparan con la anterior necesitamos el Fold, y ademas nuestra seed es el primer edificio, por ello foldl1 o bien foldr1
+
+{-
+===========================================================================================================================================================
+-}
+
+{-
+    Ejercicio 4
+-}
+
+{-
+        a) realizarLasQueCumplan :: [Tarea] -> [Aldea -> Bool] -> Aldea -> Aldea
+        que recibe una lista de tareas, y un conjunto de criterios y
+        retorne como quedaria la aldea si se realizaran las tareas validas
+        cumple si despues de realizarse cumple los criterios validos
+-}
+
+type Tarea = Aldea -> Aldea
+
+-- Tenemos que hacer un fold claramente, con seed la aldea
+realizarLasQueCumplan :: [Tarea] -> [Aldea -> Bool] -> Aldea -> Aldea
+realizarLasQueCumplan tareas criterios aldea= foldr id aldea (tareasValidas tareas criterios aldea)
+-- Lo inteligente de esto es el uso de 'id' para usar la misma tarea en el foldeo
+
+-- Filtro las tareas a aplicar
+tareasValidas  :: [Tarea] -> [(Aldea -> Bool)] -> Aldea -> [Tarea]
+tareasValidas tareas criterios ualdea = filter (cumplen criterios ualdea) tareas
+
+-- Busco que todos los criterios se cumplan, 'all' y aplico todos los criterios
+cumplen :: [Aldea -> Bool] -> Aldea -> Tarea -> Bool
+cumplen criterio aldea tarea = ((all (== True)) . map (aplicarCriterios tarea aldea) ) criterio
+
+-- "Hace un flip para aplicar la aldea a cada crierio"
+aplicarCriterios :: Tarea -> Aldea -> (Aldea -> Bool) -> Bool
+aplicarCriterios tarea aldea criterio = criterio (tarea aldea)
+
+-- Test
+nomolandia :: Aldea
+nomolandia = (gnomitos, [madera30], [barracas])
+
+madera30 :: Material
+madera30 = ("Madera de Arce", 30)
+--
+
