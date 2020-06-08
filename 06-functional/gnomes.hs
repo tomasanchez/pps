@@ -183,7 +183,7 @@ recolectar material amount (p, m, e) = (p, ((replicate amount material) ++ m), e
 -- Ena la primera, creamos la aldea y modificamos los materiales unicamente
 -- Como es una lista y la modificamos alterandola, usamos MAP, delegamos el problema a otra funcion
 construirEdificio :: Edificio -> Aldea ->  Aldea
-construirEdificio nuevo_ed (p, m, e) = (p, map (consumirMateriales nuevo_ed) m , nuevo_ed : e)
+construirEdificio nuevo_ed (p, m, e) = (p, (filter ((/= 0) . snd) . map (consumirMateriales nuevo_ed)) m , nuevo_ed : e)
 -- Uno estaria tentado a hacer nuevo_ed ++ e, pero eso solo funciona con [a] y nuevo_ed es a, usamps operador :
 
 -- Tenemos una funcion partida, si necesita el material, lo modificia, sino devuelve al mismo, ahora para crear otro material, delegamos a otra funcion como obtener el valor del material, pero sabemos que se tiene que restar
@@ -191,6 +191,7 @@ consumirMateriales :: Edificio -> Material -> Material
 consumirMateriales ed mat | (any (seaMaterial mat) . snd) ed = (fst mat, snd mat - (snd . materialesEdificio mat) ed)
                           | otherwise = mat
 -- El unico problema es que esto deja un Material con 0 unidades, ej ("Acero", 0)
+-- [UPDATED] Lo resolvi filtrando aquellos que sean distinto de 0
 
 -- Esta funcion obtiene el material, como lo obtiene es problema de otro
 materialesEdificio :: Material -> Edificio -> Material
