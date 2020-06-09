@@ -58,6 +58,7 @@ data Ingrediente = Ingrediente {
   efectos :: [Efecto]
 }
 
+nombresDeIngredientesProhibidos :: [[Char]]
 nombresDeIngredientesProhibidos = [
  "sangre de unicornio",
  "veneno de basilisco",
