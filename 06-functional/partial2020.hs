@@ -170,7 +170,7 @@ sonDeAlgunColor cls cl = any (== cl) cls
     que el campeón.
 -}
 masRapidoQueCampeon :: Chocobo -> Terreno -> [Chocobo] -> Int
-masRapidoQueCampeon campeon terr chocobos = (length . filter ((\ c1 c2 -> velocidad c1 < velocidad c2 ) (terr campeon)) . map terr) chocobos
+masRapidoQueCampeon campeon terr = length . filter ((\ c1 c2 -> velocidad c1 < velocidad c2 ) (terr campeon)) . map terr
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 {-
