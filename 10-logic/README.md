@@ -52,7 +52,8 @@ vende( cd(differentClass,       pulp,                       pop,   2,       24),
 vende( cd(bloodOnTheTracks,     bobDylan,                   golk,  1,       12),        2500).
 ```
 
-Uno se preguntaria como distingue un functor de un predicado; un **functor solo aparece como parametro**. De definirse:
+Uno se preguntaria como distingue un functor de un predicado; un **functor solo aparece como parametro**. 
+De definirse:
 
 ```prolog
 libro(elResplandor,         stephenKing,        terror,     debolsillo).
