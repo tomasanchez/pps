@@ -4,7 +4,7 @@ Trabajaremos con *wollok*. Se trata de un paradigma menos declarativo, facil de 
 
 En general, la propuesta es simplificar un problema, es combinar estructura de clases y logica, con la idea de 'objeto'.
 
-## Temas vistos:
+## Temas Vistos
 
 - Paradigma
   - Nociones Generales
@@ -39,7 +39,7 @@ En cuanto a la identidad, un objeto es unico, de existir otro con mismos atribut
 Una ornitologa,  Emilia, nos pide ayuda para estudiar el consumo energetico de Pepita, la golondrita tijerita.
 Volar consume energia de Pepita, la cual recupera comiendo.
 
-```js
+```wlk
 object pepita{
     var energia = 100
 
@@ -89,7 +89,7 @@ Evitaremos los switch cases, considerandolos anti-patron, por ahora.
 
 Sobre el mismo ejemplo supongamos ahora con Pepaza la ganza, y Pepudo el pinguino
 
-```js
+```wlk
 object pepaza{
     method volar(kilometros)
     method come()
@@ -113,7 +113,7 @@ Con Pepudo la situacion se complica, ya que para nuesto modelo, segun la interfa
 
 Implementar a Ramiro, que cuando entrena un ave, la hace volar 15 km, cuando esta de buen humor, y cuando no el doble. Esta de mal humor porque esta cansado, y esta cansado cuando durmio menos de 8 horas.
 
-```js
+```wlk
 object ramiro{
 
     var horasDormidas = 0

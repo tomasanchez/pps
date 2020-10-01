@@ -1,6 +1,5 @@
 # 03 - Paradigma Logico
 
-
 # Functores y Polimorfismo
 
 Supongamos lo siguiente, en una libreria se precisa una base de datos para consultar sobre la venta de libros
