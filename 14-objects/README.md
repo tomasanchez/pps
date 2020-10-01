@@ -1,7 +1,5 @@
 # [02] - Objetos
 
-<hr/>
-
 ## Temas
 
 - **Clases**
