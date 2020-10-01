@@ -11,7 +11,6 @@
 
 <hr/>
 
-
 Retomamos con el ejemplo de "Pepita", la golondrina.
 
 Introducimos el caso donde se quiera tratar otra golondria, con las mismas caracteristicas que pepita. Si bien podrimos copiar y pegar cambiandole el nombre, "Pepito". Si bien esto suena mal de por si, la inconvencia principal surge cuando se necesita modificar algun metodo, para todas las golondrinas.
@@ -62,7 +61,7 @@ Si quisiera crear una nueva instancia de esta clase...
 Tambien podemos realizar lo siguiente...
 
 ```wlk
-> cons pepito = new Golondrina(energia = 180)
+> const pepito = new Golondrina(energia = 180)
 ```
 
 Podremos modificar los valores *default* de sus atributos.
@@ -73,13 +72,13 @@ Si bien vimos como los objetos nacen, no mencionamos nada de donde residen en me
 
 Veamos esta referencia por nombre propio
 
-```
+```wlk
 const pepita = new Golondrina()
 ```
 
 En cambio,
 
-```
+```wlk
 new Golondrina()
 ```
 
