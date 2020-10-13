@@ -1,4 +1,4 @@
-# [03] - Objetos
+# 03 - Objetos
 
 ## Temas Vistos
 

@@ -1,4 +1,4 @@
-# [02] - Objetos
+# 02 - Objetos
 
 ## Temas
 

@@ -1,4 +1,4 @@
-# [01] - Objetos
+# 01 - Objetos
 
 ## Práctica 1: Julieta en la Feria | PdeP JN - 2020 - Objetos
 
