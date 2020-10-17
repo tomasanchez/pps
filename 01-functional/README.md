@@ -1,4 +1,4 @@
-# [01](https://github.com/tomasanchez/pps/) - Paradigma Funcional
+# 01 - Paradigma Funcional
 
 ## Guardas
 

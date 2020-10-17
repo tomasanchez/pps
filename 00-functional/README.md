@@ -1,4 +1,4 @@
-# [00](https://github.com/tomasanchez/pps/) - Paradigma Funcional
+# 00 - Paradigma Funcional
 
 Durante este paradigma se trabajara con el lenguaje *Haskell*.
 
