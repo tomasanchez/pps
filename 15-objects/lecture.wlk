@@ -104,28 +104,15 @@ class Carrito{
 
     method cantidadDeProductos() = productos.size()
 
-    method detalleDeCompra() {
-        const sorted = []
-        sorted.addAll(productos)
-
-        sorted.sortBy({
-            oItem1, oItem2 => oItem1.descripcion() < oItem2.descripcion()
-        })
-		
-		const ret = []
-		ret.addAll(sorted.map{oItem => oItem.descripcion()}.asSet())
-        return ret
-    }
+    method detalleDeCompra() = productos.map({ oItem =>
+        oItem.precio()
+    }).asSet().sortedBy({oItem1, oItem2 =>
+        oItem1 < oItem2
+    })
     
-    method totalAAbonar(){
-        const total = []
-
-        total.addAll(productos)
-
-        return total.map({
-            oItem => oItem.precio()
-        }).sum()
-    }
+    method totalAAbonar() = productos.sum({oItem =>
+        oItem.precio()
+    })
     
     method productoMasCaro() = productos.max({
         oItem => oItem.precio()
