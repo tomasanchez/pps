@@ -20,3 +20,9 @@ In this repository you will find my notes, assignmets and exams taken, and solve
 - [**Logic**](07-logic/README.md), using *Prolog*
 
 - [**Objects**](12-objects/README.md), using *Wollok*
+
+## License
+
+All material is provided under an MIT License unless otherwise specified.
+
+MIT License: <https://mit-license.org/> or see the [`LICENSE`](https://github.com/tomasanchez/SSL/blob/master/LICENSE) file.
