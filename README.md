@@ -10,7 +10,6 @@ Recopilo apuntes de los tres paradigmas vistos:
 
 - [**Objetos**](12-objects/README.md), con el lenguaje *Wollok*
 
-
 # Programming Paradimgs - EN
 
 In this repository you will find my notes, assignmets and exams taken, and solved by me during 2020-*K2055*-Course.
@@ -25,4 +24,4 @@ In this repository you will find my notes, assignmets and exams taken, and solve
 
 All material is provided under an MIT License unless otherwise specified.
 
-MIT License: <https://mit-license.org/> or see the [`LICENSE`](https://github.com/tomasanchez/SSL/blob/master/LICENSE) file.
+MIT License: <https://mit-license.org/> or see the [`LICENSE`](https://github.com/tomasanchez/pps/blob/master/LICENSE) file.
