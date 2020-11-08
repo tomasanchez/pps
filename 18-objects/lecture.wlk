@@ -78,6 +78,62 @@ class Perro {
     perros (hasta que tenga éxito o se quede sin perros para cruzar).
 */
 
+/* Los criaderos tienen y reciben perros, pueden realizar el cruce de ellos, y para esto utilizan distintos criterios de seleccion*/
+class Criadero{
+    /*Metodos obligatorios por consigna*/
+	var property perros = []
+	method recibirPerro(oDog) = perros.add(oDog)
+	
+	method cruzar(oEstrategia) {
+			const oPerro = oEstrategia.cruzar(self)
+			self.recibirPerro(oPerro)
+			return oPerro
+	}
+	
+	/* Los siguientes metodos permitirian una facil adicion de otro tipo de criadero*/
+	method criterioDeSeleccion() = perros.sortedBy({
+			oPerro1, oPerro2 => oPerro1.status() > oPerro2.status()
+		}).take(2)
+
+	method tratarPerrosIncompatilbes(oEstrategia, lPerros){
+	}
+}
+
+class CriaderoIrresponsable inherits Criadero{
+
+    /*Si por alguna razon fueran el mismo perro, serian incompatibles por tener el mismo sexo*/
+	override method criterioDeSeleccion() = [perros.anyOne(), perros.anyOne()]
+
+	override method tratarPerrosIncompatilbes(oEstrategia, lPerros){
+		perros.remove(lPerros.get(0))
+		perros.remove(lPerros.get(1))
+		self.cruzar(oEstrategia)
+	}
+}
+
+/* Controlador de seleccion de perros permite liberar la responsabilidad de seleccionar perros de las estrategias y criaderos*/
+object oControllerPerros{
+	
+	method hembra(lPerros) 	= lPerros.find({ oPerro => oPerro.esHembra() })
+	method macho(lPerros) 	= lPerros.find({ oPerro => not oPerro.esHembra()})
+	
+    /*Es necesario el Criadero y no la lista de Perros ya que varia la seleccion de perros segun el criadero*/
+	method tomarPerros (oCriadero){
+		if(oCriadero.perros().size() >= 2){
+			return oCriadero.criterioDeSeleccion()
+		}else throw new SinPerrosException(message =
+			"No hay suficientes perros", totalPerros = oCriadero.perros().size())
+            /*Como el resto de las operaciones dependen de que se obtuvieron ambos perros,
+            se lanza una exception si no los consigue*/
+	}
+	
+	method aparear(oEstrategia, lPerros){
+        /*La compatibilidad de los perros depende de la estrategia*/
+		if(oEstrategia.perrosCompatibles(lPerros.get(0), lPerros.get(1))){
+			return new Perro(velocidad= oEstrategia.velocidad(lPerros), fuerza = oEstrategia.fuerza(lPerros))
+		}else throw new PerrosIncompatiblesException(message="Perros Incompatibles", perros = lPerros)
+	}
+}
 /*
     Estrategias de Cruza
 
@@ -97,7 +153,80 @@ class Perro {
     pero además en el caso de la estrategia de hembra dominante, la fuerza de la hembra debería superar a la fuerza del macho. 
 */
 
+/* La idea de las estrategias es que varien la fuerza, velocidad y compatibilidad de los perros*/
+class Estrategia{
+
+    /*Por norma general, deberan ser adultos y de distinto sexo*/
+	method perrosCompatibles(oPerro1, oPerro2){
+		return (oPerro1.esHembra() != oPerro2.esHembra()) && oPerro1.adulto() && oPerro2.adulto()
+	} 
+	
+    /*Estos atributos varian de acuerdo a la estrategia*/
+	method velocidad(lPerros)
+	method fuerza(lPerros)
+	
+    /*Para obtener un nuevo perro se lo delega al Controlador*/
+	method cruzar(oCriadero){
+		try{
+			return oControllerPerros.aparear(self, oControllerPerros.tomarPerros(oCriadero))
+		} catch error: PerrosIncompatiblesException{
+			oCriadero.tratarPerrosIncompatilbes(self, error.perros())
+			return error.message()
+		}
+	}
+}
+
+object cruzaPareja inherits Estrategia{
+	override method velocidad(lPerros) = lPerros.sum({
+		oPerro => oPerro.velocidad()
+	}) / 2
+	override method fuerza(lPerros) = lPerros.sum({
+		oPerro => oPerro.fuerza()
+	}) / 2
+}
+
+object hembraDominante inherits Estrategia{
+	
+	override method perrosCompatibles(oPerro1, oPerro2) {
+		if(oPerro1.esHembra()) return oPerro1.fuerza() > oPerro2.fuerza() && super(oPerro1, oPerro2)
+		else return oPerro2.fuerza() > oPerro1.fuerza()
+	}
+	
+	override method velocidad(lPerros) = 
+	oControllerPerros.hembra(lPerros).velocidad() + 0.05 * oControllerPerros.macho(lPerros).velocidad()
+	override method fuerza(lPerros)	=
+	oControllerPerros.hembra(lPerros).fuerza() + 0.05 * oControllerPerros.macho(lPerros).fuerza()
+}
+
+object underdog inherits Estrategia{
+	override method velocidad(lPerros) = lPerros.min({
+		oPerro => oPerro.velocidad()
+	}) * 2
+	override method fuerza(lPerros) = lPerros.min({
+		oPerro => oPerro.fuerza()
+	}) * 2
+}
+
+class SinPerrosException inherits DomainException {
+	const property totalPerros
+}
+
+class PerrosIncompatiblesException inherits DomainException{
+	var property perros
+}
+
+
 /*
     No debería importar el orden en el que se parametricen el macho y la hembra a la estrategia de cruza, el resultado debería ser equivalente.
     El sexo de la cría no es determinístico (va a ser aleatorio independientemente de la estrategia usada), y lógicamente no se espera que sean adultos al nacer.
 */
+
+/*
+    Además de lo anterior, se pide definir los métodos crearCriaderoIrresponsable y crearCriaderoResponsable en el objeto creadorDeCriaderos
+    que retornen el criadero correspondiente en base a tu modelo para su uso desde las pruebas.
+*/
+
+object creadorDeCriaderos {
+	method crearCriaderoIrresponsable() = new Criadero()
+	method crearCriaderoResponsable() = new CriaderoIrresponsable()
+}
