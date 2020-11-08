@@ -84,11 +84,7 @@ class Criadero{
 	var property perros = []
 	method recibirPerro(oDog) = perros.add(oDog)
 	
-	method cruzar(oEstrategia) {
-			const oPerro = oEstrategia.cruzar(self)
-			self.recibirPerro(oPerro)
-			return oPerro
-	}
+	method cruzar(oEstrategia) = oEstrategia.cruzar(self)
 	
 	/* Los siguientes metodos permitirian una facil adicion de otro tipo de criadero*/
 	method criterioDeSeleccion() = perros.sortedBy({
@@ -96,13 +92,19 @@ class Criadero{
 		}).take(2)
 
 	method tratarPerrosIncompatilbes(oEstrategia, lPerros){
-	}
+        throw new PerrosIncompatiblesException(message="Perros Incompatibles", perros = lPerros)
+    }
 }
 
 class CriaderoIrresponsable inherits Criadero{
 
-    /*Si por alguna razon fueran el mismo perro, serian incompatibles por tener el mismo sexo*/
-	override method criterioDeSeleccion() = [perros.anyOne(), perros.anyOne()]
+	override method criterioDeSeleccion(){
+		const oPerro = perros.anyOne()
+
+		return [oPerro, perros.filter({
+			a => a != oPerro
+		}).anyOne()]
+	}
 
 	override method tratarPerrosIncompatilbes(oEstrategia, lPerros){
 		perros.remove(lPerros.get(0))
@@ -168,10 +170,13 @@ class Estrategia{
     /*Para obtener un nuevo perro se lo delega al Controlador*/
 	method cruzar(oCriadero){
 		try{
-			return oControllerPerros.aparear(self, oControllerPerros.tomarPerros(oCriadero))
+			oCriadero.recibirPerro(
+                oControllerPerros.aparear(
+                    self, oControllerPerros.tomarPerros(oCriadero)
+                )
+            )
 		} catch error: PerrosIncompatiblesException{
 			oCriadero.tratarPerrosIncompatilbes(self, error.perros())
-			return error.message()
 		}
 	}
 }
@@ -201,10 +206,10 @@ object hembraDominante inherits Estrategia{
 object underdog inherits Estrategia{
 	override method velocidad(lPerros) = lPerros.min({
 		oPerro => oPerro.velocidad()
-	}) * 2
+	}).velocidad() * 2
 	override method fuerza(lPerros) = lPerros.min({
 		oPerro => oPerro.fuerza()
-	}) * 2
+	}).fuerza() * 2
 }
 
 class SinPerrosException inherits DomainException {
@@ -230,3 +235,14 @@ object creadorDeCriaderos {
 	method crearCriaderoIrresponsable() = new Criadero()
 	method crearCriaderoResponsable() = new CriaderoIrresponsable()
 }
+
+/* Objetos de prueba */
+const lucas = new Perro(fuerza= 10, velocidad= 10, adulto = true, esHembra = false, nombre = "Lucas")
+const laya = new Perro(fuerza= 2, velocidad= 6, adulto = true, esHembra = false, nombre = "Laya")
+const laucha = new Perro(fuerza= 7, velocidad= 10, adulto = true, esHembra = false, nombre = "Laucha")
+const mPerros = [laya, lucas, laucha]
+
+const criadero1 = new Criadero(perros = mPerros)
+const criadero2 = new CriaderoIrresponsable(perros = mPerros)
+
+
