@@ -82,18 +82,16 @@ class Usuario {
 class Publicacion {
 	const property oUserOwner
 	const property oDate
-	const property isStory = false
 	var property oType
 	
-	method esVisible(oUser, dDate){
-		if(isStory) {
-			// Solo deben ser visibles entre El dia de publicacion y el Siguiente
-			return if(oUserOwner == oUser) true else (dDate - oDate == 1 || dDate - oDate == 0) && oType.esVisible(oUserOwner, oUser) 
-		}else{
-			//Aseguro que no la pueda ver antes de que se publique
-			return dDate - oDate >= 0 && oType.esVisible(oUserOwner, oUser)
-		}
-	}
+	//Aseguro que no la pueda ver antes de que se publique
+	method esVisible(oUser, dDate) = return dDate - oDate >= 0 && oType.esVisible(oUserOwner, oUser)
+			
+			
+}
+
+class Historia inherits Publicacion{
+	override method esVisible() = if(oUserOwner == oUser) true else (dDate - oDate == 1 || dDate - oDate == 0) && oType.esVisible(oUserOwner, oUser)
 }
 
 object publica{
@@ -131,10 +129,10 @@ object creacionDeContenido {
 		return new Publicacion(oUserOwner = oUser, oDate = dDate, oType = privada )
 	}
 	method crearHistoriaPublica(oUser, dDate) {
-		return new Publicacion(oUserOwner = oUser, oDate = dDate, oType = publica, isStory = true)
+		return new Historia(oUserOwner = oUser, oDate = dDate, oType = publica)
 	}
 	method crearHistoriaPrivada(oUser, dDate) {
-		return new Publicacion(oUserOwner = oUser, oDate = dDate, oType = privada, isStory = true)
+		return new Historia(oUserOwner = oUser, oDate = dDate, oType = privada)
 	}
 	method crearPublicacionConListaNegra(oUser, dDate, aUsersBlackList) {
 		return new Publicacion(oUserOwner = oUser, oDate = dDate,
@@ -142,8 +140,8 @@ object creacionDeContenido {
 		)
 	}
 	method crearHistoriaConListaNegra(oUser, dDate, aUsersBlackList) {
-		return new Publicacion(oUserOwner = oUser, oDate = dDate,
-			oType = new ConListaNegra(blackList = aUsersBlackList), isStory = true
+		return new Historia(oUserOwner = oUser, oDate = dDate,
+			oType = new ConListaNegra(blackList = aUsersBlackList)
 		)
 	}
 }

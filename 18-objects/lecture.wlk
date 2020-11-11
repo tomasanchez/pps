@@ -244,5 +244,3 @@ const mPerros = [laya, lucas, laucha]
 
 const criadero1 = new Criadero(perros = mPerros)
 const criadero2 = new CriaderoIrresponsable(perros = mPerros)
-
-
