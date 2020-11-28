@@ -80,24 +80,52 @@ class Perro {
 
 /* Los criaderos tienen y reciben perros, pueden realizar el cruce de ellos, y para esto utilizan distintos criterios de seleccion*/
 class Criadero{
-    /*Metodos obligatorios por consigna*/
+	/*Metodos obligatorios por consigna */
+    /*Listado de perros*/
 	var property perros = []
-	method recibirPerro(oDog) = perros.add(oDog)
-	
-	method cruzar(oEstrategia) = oEstrategia.cruzar(self)
-	
-	/* Los siguientes metodos permitirian una facil adicion de otro tipo de criadero*/
-	method criterioDeSeleccion() = perros.sortedBy({
-			oPerro1, oPerro2 => oPerro1.status() > oPerro2.status()
-		}).take(2)
+    /*Agrega un perro al listado*/
+	method recibirPerro(oPerro) = perros.add(oPerro)
 
-	method tratarPerrosIncompatilbes(oEstrategia, lPerros){
-        throw new PerrosIncompatiblesException(message="Perros Incompatibles", perros = lPerros)
-    }
+    /*Aplica una estrategia para cruzar dos perros de la lista*/
+	method cruzar (oEstrategia) {
+		oEstrategia.cruzar(self, self.obtenerPerros())
+		}
+	
+    /*Obtiene los dos perros de la lista*/
+	method obtenerPerros(){
+		
+		if(perros.size() >= 2)
+			return self.criterioDeSeleccion()
+		else
+			throw new SinPerrosException(message =
+				"No hay suficienes perros", totaaPerros = perros.size())
+	}
+	
+	/*Metodos que permitirian anadir mas tipos de criaderos*/
+	
+	/*Devuelve dos perros segun un criterio para cada tipo de criadero*/
+	method criterioDeSeleccion()
 }
 
-class CriaderoIrresponsable inherits Criadero{
+/*Criadero con criterio de "Mejor Status"*/
+class CriaderoResponsable inherits Criadero{
+	
+   /*Selecciona dos perros segun su status*/ 
+  override method criterioDeSeleccion(){
+			const aPerros = perros.sortedBy({
+					oPerro1, oPerro2 => oPerro1.status() > oPerro2.status()
+				})
+				
+			if (aPerros.any({ oPerro => oPerro.esHembra()})){
+				return [oControllerPerros.macho(aPerros), oControllerPerros.hembra(aPerros)]
+			} else return aPerros.take(2)
+		}
+}
 
+/*Criadero con criterio de seleccion al azar y abandono de perros*/
+class CriaderoIrresponsable inherits Criadero{
+	
+    /*Selecciona 2 perros al azar*/
 	override method criterioDeSeleccion(){
 		const oPerro = perros.anyOne()
 
@@ -105,35 +133,44 @@ class CriaderoIrresponsable inherits Criadero{
 			a => a != oPerro
 		}).anyOne()]
 	}
-
-	override method tratarPerrosIncompatilbes(oEstrategia, lPerros){
-		perros.remove(lPerros.get(0))
-		perros.remove(lPerros.get(1))
-		self.cruzar(oEstrategia)
+	
+    /*Intenta cruzar si no puede abandona a los perros*/
+	override method cruzar(oEstrategia){
+		try{
+            console.println("Intentando cruzar perros...")
+			super(oEstrategia)
+            console.println("Cruza exitosa!")
+		} catch error: PerrosIncompatiblesException{
+            console.println("Perros incompatibles, descartando perros...")
+			self.descartarPerros(error.perros())
+            console.println("Perros descartados")
+			self.cruzar(oEstrategia)
+		}
+	}
+	
+	/*Abandona a los perros incomptibles */
+	method descartarPerros(aPerros){
+      self.perros().remove(aPerros.get(0))
+      self.perros().remove(aPerros.get(1))
 	}
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /* Controlador de seleccion de perros permite liberar la responsabilidad de seleccionar perros de las estrategias y criaderos*/
 object oControllerPerros{
+
+	/*Obtiene el primer perro hembra */
+	method hembra(aPerros) 	= aPerros.find({ oPerro => oPerro.esHembra() })
+    /*Obtiene el primer perro macho*/
+	method macho(aPerros) 	= aPerros.find({ oPerro => not oPerro.esHembra()})
 	
-	method hembra(lPerros) 	= lPerros.find({ oPerro => oPerro.esHembra() })
-	method macho(lPerros) 	= lPerros.find({ oPerro => not oPerro.esHembra()})
-	
-    /*Es necesario el Criadero y no la lista de Perros ya que varia la seleccion de perros segun el criadero*/
-	method tomarPerros (oCriadero){
-		if(oCriadero.perros().size() >= 2){
-			return oCriadero.criterioDeSeleccion()
-		}else throw new SinPerrosException(message =
-			"No hay suficientes perros", totalPerros = oCriadero.perros().size())
-            /*Como el resto de las operaciones dependen de que se obtuvieron ambos perros,
-            se lanza una exception si no los consigue*/
-	}
-	
-	method aparear(oEstrategia, lPerros){
+    /*Dada una estrategia y dos perros compatibles devuelve un nuevo perro o lanza excepcion*/
+	method aparear(oEstrategia, aPerros){
         /*La compatibilidad de los perros depende de la estrategia*/
-		if(oEstrategia.perrosCompatibles(lPerros.get(0), lPerros.get(1))){
-			return new Perro(velocidad= oEstrategia.velocidad(lPerros), fuerza = oEstrategia.fuerza(lPerros))
-		}else throw new PerrosIncompatiblesException(message="Perros Incompatibles", perros = lPerros)
+		if(oEstrategia.perrosCompatibles(aPerros.get(0), aPerros.get(1))){
+			return new Perro(velocidad= oEstrategia.velocidad(aPerros), fuerza = oEstrategia.fuerza(aPerros))
+		}else throw new PerrosIncompatiblesException(message="Perros Incompatibles", perros = aPerros)
 	}
 }
 /*
@@ -164,28 +201,20 @@ class Estrategia{
 	} 
 	
     /*Estos atributos varian de acuerdo a la estrategia*/
-	method velocidad(lPerros)
-	method fuerza(lPerros)
+	method velocidad(aPerros)
+	method fuerza(aPerros)
 	
     /*Para obtener un nuevo perro se lo delega al Controlador*/
-	method cruzar(oCriadero){
-		try{
-			oCriadero.recibirPerro(
-                oControllerPerros.aparear(
-                    self, oControllerPerros.tomarPerros(oCriadero)
-                )
-            )
-		} catch error: PerrosIncompatiblesException{
-			oCriadero.tratarPerrosIncompatilbes(self, error.perros())
-		}
+	method cruzar(oCriadero, aPerros){
+		oCriadero.recibirPerro(oControllerPerros.aparear(self, aPerros))
 	}
 }
 
 object cruzaPareja inherits Estrategia{
-	override method velocidad(lPerros) = lPerros.sum({
+	override method velocidad(aPerros) = aPerros.sum({
 		oPerro => oPerro.velocidad()
 	}) / 2
-	override method fuerza(lPerros) = lPerros.sum({
+	override method fuerza(aPerros) = aPerros.sum({
 		oPerro => oPerro.fuerza()
 	}) / 2
 }
@@ -197,25 +226,29 @@ object hembraDominante inherits Estrategia{
 		else return oPerro2.fuerza() > oPerro1.fuerza()
 	}
 	
-	override method velocidad(lPerros) = 
-	oControllerPerros.hembra(lPerros).velocidad() + 0.05 * oControllerPerros.macho(lPerros).velocidad()
-	override method fuerza(lPerros)	=
-	oControllerPerros.hembra(lPerros).fuerza() + 0.05 * oControllerPerros.macho(lPerros).fuerza()
+	override method velocidad(aPerros) = 
+	oControllerPerros.hembra(aPerros).velocidad() + 0.05 * oControllerPerros.macho(aPerros).velocidad()
+	override method fuerza(aPerros)	=
+	oControllerPerros.hembra(aPerros).fuerza() + 0.05 * oControllerPerros.macho(aPerros).fuerza()
 }
 
 object underdog inherits Estrategia{
-	override method velocidad(lPerros) = lPerros.min({
+	override method velocidad(aPerros) = aPerros.min({
 		oPerro => oPerro.velocidad()
 	}).velocidad() * 2
-	override method fuerza(lPerros) = lPerros.min({
+	override method fuerza(aPerros) = aPerros.min({
 		oPerro => oPerro.fuerza()
 	}).fuerza() * 2
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*Excepcion de criadero sin suficientes perros en su lista*/
 class SinPerrosException inherits DomainException {
-	const property totalPerros
+	const property totaaPerros
 }
 
+/*Excepcion de perros incompatibles segun estrategia*/
 class PerrosIncompatiblesException inherits DomainException{
 	var property perros
 }
@@ -231,10 +264,13 @@ class PerrosIncompatiblesException inherits DomainException{
     que retornen el criadero correspondiente en base a tu modelo para su uso desde las pruebas.
 */
 
+/*Controlador para la creacion de criaderos*/
 object creadorDeCriaderos {
-	method crearCriaderoIrresponsable() = new Criadero()
+	method crearCriaderoIrresponsable() = new CriaderoResponsable()
 	method crearCriaderoResponsable() = new CriaderoIrresponsable()
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* Objetos de prueba */
 const lucas = new Perro(fuerza= 10, velocidad= 10, adulto = true, esHembra = false, nombre = "Lucas")
