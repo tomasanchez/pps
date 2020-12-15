@@ -1,5 +1,15 @@
 # 02 - Funcional
 
+## Temas Vistos
+
+- **Composicion**
+- **Currificación**
+- **Aplicación Parcial**
+    - Resolucion de segundo parametro
+      - Lambda
+      - Notación Infija
+      - Flip
+
 ## Composición
 
 Podemos traer el concepto matemático, dados tres conjuntos `A, B, C`  y poseo las función `g: A -> B` y `f: B -> C`, podemos establecer `f∘g: A -> C`. Donde `(f∘g) (x) == f ( g(x) )`.
@@ -51,7 +61,7 @@ Tomemos el tipo de la funcion de composición:
 
 Vemos que solo podemos pasar funciones que solo toman un parametro, lo cual parece bastante restrictivo: muchas de las funciones que normalmente utilizamos utilizan un solo parametro.
 
-Por suerte este no es el caso, y en haskell todas las funciones pasan por un proceso denominado currifación. Esto consiste en la simplificacion de una función que resibe varios parametros, en una que recibe un único parámetro y devuelve una función. Asi podríamos ver que: 
+Por suerte este no es el caso, y en haskell todas las funciones pasan por un proceso denominado currifación. Esto consiste en la simplificacion de una función que resibe varios parametros, en una que recibe un único parámetro y devuelve una función. Asi podríamos ver que:
 
 ```hs
 f :: a -> b -> c -> d
