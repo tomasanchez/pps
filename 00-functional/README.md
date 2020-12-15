@@ -1,10 +1,21 @@
-# 00 - Paradigma Funcional
+# 00 - Paradigmas de la Programación
+
+## Temas Vistos
+
+- **¿Qué es un paradigma de programación?**
+- **Declaratividad**
+- **Expresividad**
+- **Abstracción**
+- **Efecto colateral o de lado**
+- **Paradigma Funcional**
+
+## Paradigma Funcional
 
 Durante este paradigma se trabajara con el lenguaje *Haskell*.
 
 La guia de ejercicios con la que se guiara la catedra sera la presente en [Mumumki](https://mumuki.io/paths)
 
-## Conceptos basicos
+### Conceptos basicos
 
 Este paradigma esta fuertemente orientado a describir construcciones en lugar de tratar de explicar los pasos a seguir para obtener un resultado.
 Podemos pensarlo como una calculadora: consiste en modelar la misma, que en particular es extensible; uno puede programar sus propios "botones".
@@ -17,9 +28,9 @@ Por lo tanto entenderemos que se podra "reemplazar" por ese valor.
 
 Pattern Matching: dada una cadena de *tokens* chequearle en busqueda de un patron, de manera de definir ciertos *behaviours* para determinados *inputs*
 
-## Comenzando con Haskel
+### Comenzando con Haskel
 
-### Setup
+#### Setup
 
 Utilizaremos ***Glasgow Haskell Compiler***, sin *stack* y a travez de una interfaz interactiva.
 
@@ -39,7 +50,7 @@ Luego compilaremos nuestro archivo *.hs*
 > :l myfile.hs
 ```
 
-### Primer Ejemplo
+#### Primer Ejemplo
 
 ```hs
 nombreCompleto nombre apellido = apellido ++ ", " ++ nombre
@@ -54,7 +65,7 @@ Por consola obtendriamos
 "Puente, Tito"
 ```
 
-### Aplicacion
+#### Aplicacion
 
 Las funciones por default se aplicaran
 
@@ -81,7 +92,7 @@ Sin embargo podemos "castear" su aplicacion de manera que
 6
 ```
 
-### Pattern Matching en Haskell
+#### Pattern Matching en Haskell
 
 Esta tecnica permite definir un *behaviour* para un valor *(patron)* especifico.
 
